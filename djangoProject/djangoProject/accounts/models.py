@@ -18,6 +18,7 @@ class CustomUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     )
 
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    is_verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
 

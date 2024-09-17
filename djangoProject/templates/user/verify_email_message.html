@@ -1,16 +1,39 @@
-<div style="background-color: #c2c2c2; padding: 15px;">
-    <h2 style="margin: 0; padding: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px; background-color: #5865F2; color: #ffffff;">
-        Verify Email</h2>
-    <div style="margin: 0; padding: 15px; background-color: #ffffff;">
-        <p>Hi {{ user.name }},</p>
-        <p>You created an account, you need to verify your email. Please click on the button below to
-            verify your email.</p>
-        <a href="{{ request.scheme }}://{{ domain }}{% url 'verify-email-confirm' uidb64=uid token=token %}"
-           style="border: 0; color: #ffffff; background-color: #5865F2; padding: 15px; font-weight: bold; text-decoration: none; border-radius: 5px; margin-top: 50px;">
-            Verify Email
-        </a>
-        <p style="margin-top: 40px;">Or you can copy the link below to your browser</p>
-        <p>{{ request.scheme }}://{{ domain }}{% url 'verify-email-confirm' uidb64=uid token=token %}</p>
-        <p>Our Team</p>
-    </div>
-</div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #c2c2c2; padding: 15px;">
+    <tr>
+        <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td style="background-color: #5865F2; padding: 10px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                        <h2 style="margin: 0; padding: 0; color: #ffffff; font-family: Arial, sans-serif;">Verify Email</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color: #ffffff; padding: 20px; font-family: Arial, sans-serif;">
+                        <p style="margin: 0;">Hi {{ user.email }},</p>
+                        <p style="margin: 10px 0 20px;">You created an account. Please click on the button below to verify your email.</p>
+                        
+                        <!-- Button -->
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td align="center" bgcolor="#5865F2" style="border-radius: 5px;">
+                                    <a href="{{ request.scheme }}://{{ domain }}{% url 'verify_email_confirm' uidb64=uid token=token %}"
+                                       style="font-size: 16px; font-family: Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 30px; display: inline-block; font-weight: bold;">
+                                        Verify Email
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <p style="margin-top: 30px;">Or you can copy and paste the following link into your browser:</p>
+                        <p style="word-break: break-all;">
+                            {{ request.scheme }}://{{ domain }}{% url 'verify_email_confirm' uidb64=uid token=token %}
+                        </p>
+                        
+                        <p style="margin-top: 20px;">Best regards,</p>
+                        <p>Our Team</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

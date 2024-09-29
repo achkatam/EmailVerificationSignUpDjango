@@ -1,25 +1,29 @@
 from django import forms
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 
-User = get_user_model()
+UserModel = get_user_model()
 
 
 class UserRegisterForm(forms.ModelForm):
-    password = forms.CharField(label="Password")
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-        model = User
-        fields = [
-            "email",
-            "password",
-        ]
+        model = UserModel
+        fields = ['email', 'password']
 
-    def clean(self, *args, **kwargs):
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-        email_check = User.objects.filter(email=email)
-        if email_check.exists():
-            raise forms.ValidationError("This Email already exists")
-        if len(password) < 5:
-            raise forms.ValidationError("Your password should have more than 5 characters")
-        return super(UserRegisterForm, self).clean(*args, **kwargs)
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if UserModel.objects.filter(email=email).exists():
+            raise forms.ValidationError("A user with that email already exists.")
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+
+        return cleaned_data

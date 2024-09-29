@@ -64,11 +64,17 @@ REST_FRAMEWORK = {
     ],
 }
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Email Verification API",
+    "DESCRIPTION": "API for user registration and email verification",
+    "VERSION": "1.0.0",
+}
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "your_email@gmail.com"
-EMAIL_HOST_PASSWORD = "your_pass"
+EMAIL_HOST_PASSWORD = "your_password"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 

@@ -1,10 +1,10 @@
-
 from django.contrib.auth import tokens as auth_tokens
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils import encoding
 from django.conf import settings
 from django.utils import http
+
 
 def send_verification_email(self, user):
     token = auth_tokens.default_token_generator.make_token(user)

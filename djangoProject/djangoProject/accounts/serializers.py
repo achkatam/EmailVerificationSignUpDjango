@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from utils import send_verification_email
+
+from djangoProject.accounts.utils import send_verification_email
 
 UserModel = get_user_model()
 
@@ -8,10 +9,21 @@ UserModel = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ("email", "password")
+        fields = ("email", "password", "confirm_password")
 
-    # This func should be refactored to send verification email after user creation
+    def validate_email(self, value):
+        if UserModel.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with that email already exists.")
+        return value
+
+    def validate(self, data):
+        if data["password"] != data["confirm_password"]:
+            raise serializers.ValidationError("Passwords do not match")
+        return data
+
     def create(self, validated_data):
+        validated_data.pop("confirm_password")
+
         user = UserModel.objects.create_user(**validated_data)
         user.is_active = False
         user.save()

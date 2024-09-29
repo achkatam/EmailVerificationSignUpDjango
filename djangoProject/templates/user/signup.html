@@ -5,9 +5,18 @@
 {% endif %}
 <form method="post">
     {% csrf_token %}
-    <label for="email">email</label>
+    {{ form.non_field_errors }}
+    <label for="email">Email</label>
+    {{ form.email.errors }}
     {{ form.email }}
+    
     <label for="password">Password</label>
+    {{ form.password.errors }}
     {{ form.password }}
-    <input type="submit" />
+    
+    <label for="confirm_password">Confirm Password</label>
+    {{ form.confirm_password.errors }}
+    {{ form.confirm_password }}
+
+    <input type="submit" value="Sign Up" />
 </form>

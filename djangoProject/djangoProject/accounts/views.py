@@ -1,3 +1,7 @@
+from rest_framework import generics as api_views, status
+from rest_framework import views
+from rest_framework.response import Response
+
 from .forms import UserRegisterForm
 from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect, render
@@ -5,6 +9,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
+
+from .serializers import UserSerializer
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
@@ -42,6 +48,7 @@ def signup_view(request):
     if request.method == "POST":
         next = request.GET.get("next")
         form = UserRegisterForm(request.POST)
+
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False

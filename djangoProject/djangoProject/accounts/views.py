@@ -1,5 +1,5 @@
-from rest_framework import generics as api_views, status
-from rest_framework import views
+from rest_framework import generics as api_views, status, permissions
+from rest_framework import views as auth_views
 from rest_framework.response import Response
 
 from .forms import UserRegisterForm
@@ -44,28 +44,17 @@ def verify_email_complete(request):
     return render(request, "user/verify_email_complete.html")
 
 
-def signup_view(request):
-    if request.method == "POST":
-        next = request.GET.get("next")
-        form = UserRegisterForm(request.POST)
+class SignupAPIView(auth_views.APIView):
+    permission_classes = [permissions.AllowAny]
 
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            password = form.cleaned_data.get("password")
-            user.set_password(password)
-            user.save()
-
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save(is_active=False)
             send_verification_email(request, user)
+            return Response({"message": "User registered. Please verify your email."}, status=status.HTTP_201_CREATED)
 
-            messages.success(request, "An email has been sent to verify your account.")
-            return redirect("verify_email_sent")
-    else:
-        form = UserRegisterForm()
-    context = {
-        "form": form
-    }
-    return render(request, "user/signup.html", context)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def send_verification_email(request, user):
@@ -76,8 +65,9 @@ def send_verification_email(request, user):
         "domain": current_site.domain,
         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
         "token": account_activation_token.make_token(user),
-        "request": request,  # This is needed for the scheme (http/https)
+        "request": request,
     })
     email = EmailMessage(subject, message, to=[user.email])
     email.content_subtype = "html"
     email.send()
+# TODO: Create home page view

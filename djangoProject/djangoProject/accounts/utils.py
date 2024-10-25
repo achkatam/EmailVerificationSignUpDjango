@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import http
 
 
-def send_verification_email(self, user):
+def send_verification_email(user):
     token = auth_tokens.default_token_generator.make_token(user)
     uid = http.urlsafe_base64_encode(encoding.force_bytes(user.pk))
     verification_link = f"{settings.FRONTEND_URL}/verify_email/?uid={uid}&token={token}"
